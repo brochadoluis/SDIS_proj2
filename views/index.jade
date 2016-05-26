@@ -65,7 +65,8 @@ block content
         //UPLOAD FILES
         form(method="post", action="/files/upload", enctype='multipart/form-data')
             br
-            input(type="file", name="image", id="image")
+            input(type="file", name="image", id="image" size=1000000)
+            input(type="text", name="fixe", id="fixe")
             br
             input(type="submit", value="Upload", class="button-style")
             br

@@ -2,13 +2,19 @@ var express = require('express');
 var path = require('path');
 var router = express.Router();
 var fs = require('fs');
+var multer  = require('multer')
+var upload = multer({ dest: './uploads/' })
 
 
-router.post('/upload', function(req, res) {
-    fs.readFile(req.files.image.path, function (err, data){ // readfilr from the given path
+router.post('/upload', upload.single('image'), function(req, res) {
+  console.log("OLHA EU AQUI");
+  console.log(req.body.fixe);
+  console.log(req.file);
+    fs.readFile(req.file.path, function (err, data){ // readfilr from the given path
       var dirname = path.resolve(".")+'/uploads/'; // path.resolve(“.”) get application directory path
-      var newPath = dirname + req.files.image.originalFilename; // add the file name
+      var newPath = dirname + req.file.originalname; // add the file name
       fs.writeFile(newPath, data, function (err) { // write file i+-*/n uploads folder
+        //remove temp file
         if(err){
           res.redirect("/");
         }
