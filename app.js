@@ -9,11 +9,11 @@ var fs = require('fs');  // add filesystem
 var multer = require('multer');
 
 // Database
-//var mongoose = require('mongoose');
-//mongoose.connect('localhost:27017/teste');
-var mongo = require('mongodb');
+var mongoose = require('mongoose');
+mongoose.connect('localhost/db');
+/*var mongo = require('mongodb');
 var monk = require('monk');
-var db = monk('localhost:27017/teste');
+var db = monk('localhost:27017/teste');*/
 
 
 var index = require('./routes/index');
@@ -42,10 +42,10 @@ app.use(express.static(path.join(__dirname, 'public')));
 //app.use(connect.urlencoded());
 
 // Make our db accessible to our router
-app.use(function(req,res,next){
+/*app.use(function(req,res,next){
     req.db = db;
     next();
-});
+});*/
 
 app.use('/', index);
 app.use('/users', users);
