@@ -28,18 +28,6 @@ node_modules
 
 # Journal directory
 db/journal
-db/WiredTiger
-db/WiredTiger.lock
-db/WiredTiger.turtle
-db/WiredTiger.wt
-db/WiredTigerLAS.wt
-db/_mdb_catalog.wt
-db/collection-0--8306109762358842374.wt
-db/diagnostic.data/
-db/index-1--8306109762358842374.wt
-db/mongod.lock
-db/sizeStorer.wt
-
 
 # Optional npm cache directory
 .npm
