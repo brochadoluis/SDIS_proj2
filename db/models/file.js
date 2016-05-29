@@ -31,5 +31,7 @@ File.addFile = function(name, callback) {
     });
 }
 
-//DELETE FILE
+File.deleteFile = function(name, callback) {
+    File.remove({name: name},callback);
+}
 exports.fileModel = File;

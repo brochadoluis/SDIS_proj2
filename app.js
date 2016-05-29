@@ -7,7 +7,7 @@ var bodyParser = require('body-parser');
 var connect = require('connect');
 var fs = require('fs');  // add filesystem
 var multer = require('multer');
-
+var session = require('express-session');
 // Database
 var mongoose = require('mongoose');
 mongoose.connect('localhost/db');
@@ -24,15 +24,17 @@ var app = express();
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
+//app.set('view engine', 'ejs');
 app.set('view engine', 'jade');
 
 // uncomment after placing your favicon in /public
-//app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
+app.use(favicon(__dirname + '/public/favicon.ico'));
 app.use(logger('dev'));
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.urlencoded({ extended: true } ));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(session({secret: 'sdisrocks'}));
 
 
 //app.use(cookieParser());

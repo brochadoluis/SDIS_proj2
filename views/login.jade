@@ -1,0 +1,20 @@
+form(method = "post", action = "/users/login")
+	p Email
+	input(type="email", name = "email", value = email)
+	p Password
+	input(type="password", name = "password", value = password)
+	p
+	input(type="submit", value = "Login",class="button-style")
+
+
+form(method = "post", action = "/users/register")
+	p Name
+	input(type="text", name = "name", value = name)
+	p Username
+	input(type="text", name = "username", value = username)
+	p Email
+	input(type="email", name = "email", value = email)
+	p Password
+	input(type="password", name = "password", value = password)
+	p
+	input(type="submit", value = "Register",class="button-style")
