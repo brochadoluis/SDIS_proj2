@@ -8,9 +8,10 @@ var connect = require('connect');
 var fs = require('fs');  // add filesystem
 var multer = require('multer');
 var session = require('express-session');
+
 // Database
 var mongoose = require('mongoose');
-mongoose.connect('localhost/db');
+mongoose.connect('127.0.0.1/db');
 
 var index = require('./routes/index');
 var users = require('./routes/users');
@@ -66,6 +67,13 @@ app.use(function(err, req, res, next) {
     message: err.message,
     error: {}
   });
+});
+
+var ipAddress = "127.0.0.1";
+var port = "1000";
+
+app.listen(port, ipAddress, function () {
+    console.log(new Date() + " Server is listening on port " + port);
 });
 
 module.exports = app;
