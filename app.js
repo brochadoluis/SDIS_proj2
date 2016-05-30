@@ -11,10 +11,6 @@ var session = require('express-session');
 // Database
 var mongoose = require('mongoose');
 mongoose.connect('localhost/db');
-/*var mongo = require('mongodb');
-var monk = require('monk');
-var db = monk('localhost:27017/teste');*/
-
 
 var index = require('./routes/index');
 var users = require('./routes/users');
@@ -25,7 +21,6 @@ var app = express();
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
-//app.set('view engine', 'ejs');
 app.set('view engine', 'jade');
 
 // uncomment after placing your favicon in /public
@@ -36,19 +31,6 @@ app.use(bodyParser.urlencoded({ extended: true } ));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(session({secret: 'sdisrocks'}));
-
-
-//app.use(cookieParser());
-//app.use(connect.logger('dev'));
-//app.use(connect.bodyParser());
-//app.use(connect.json());
-//app.use(connect.urlencoded());
-
-// Make our db accessible to our router
-/*app.use(function(req,res,next){
-    req.db = db;
-    next();
-});*/
 
 app.use('/', index);
 app.use('/users', users);

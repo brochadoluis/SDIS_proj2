@@ -61,6 +61,7 @@ router.get('/filelist', function(req, res) {
 
 router.get('/delete/:name', function(req, res) {
   var dirname = path.resolve(".")+'/uploads/';
+  var file = dirname + req.params.name;
   models.fileModel.deleteFile(req.params.name, function(err) {
     models.roomModel.getRoomByUser(req.session.username, function( err, room){
       models.roomModel.deleteFileInRoom(room[0].name, req.params.name,function( err, rooms){
@@ -68,6 +69,11 @@ router.get('/delete/:name', function(req, res) {
           models.roomModel.getUsers(room[0].name, function (err, usersRoom) {
             for(var i = 0; i < usersRoom.users.length; i++){
               models.userModel.getEmail(usersRoom.users[i], function(erro, user) {
+                fs.unlink(file, function(err){
+                 if (err){
+                  res.send(err);
+                 }
+               });
                 sendEmail(req.session.username,user[0], req.params.name, "deleted");
               });
             }
