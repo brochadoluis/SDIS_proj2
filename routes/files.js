@@ -5,6 +5,7 @@ var fs = require('fs');
 var multer  = require('multer')
 var upload = multer({ dest: './uploads/' })
 var models = require('../db/models/index.js');
+var nodemailer = require('nodemailer');
 
 router.get('/home', function(req, res, next) {
   res.render('index', { title: 'Express' });
@@ -16,23 +17,20 @@ router.post('/upload', upload.single('image'), function(req, res) {
   var newPath = dirname + req.file.originalname; // add the file name
   fs.readFile(req.file.path, function (err, data){ // readfilr from the given path
     fs.renameSync(dirname+req.file.filename, dirname + req.file.originalname);
-     models.fileModel.addFile(req.file.originalname, function (err) {
+    models.fileModel.addFile(req.file.originalname, function (err) {
       models.roomModel.getRoomByUser(req.session.username, function( erro, room){
         models.roomModel.addFileToRoom(room[0].name, req.file.originalname, function (errr, file) {
-            res.redirect("/home");
+          models.roomModel.getUsers(room[0].name, function (err, usersRoom) {
+            for(var i = 0; i < usersRoom.users.length; i++){
+              models.userModel.getEmail(usersRoom.users[i], function(erro, user) {
+                sendEmail(req.session.username,user[0], req.file.originalname, "uploaded");
+              });
+            }
+          });
+          res.redirect("/home");
+        });
       });
-      });
-       /*if(err == null){
-         console.log("OK");
-         console.log(req.session);
-         console.log(req.session.name);
-         console.log(req.session.username);
-         console.log(req.session.email);
-         console.log(req.session.password);
-       }else {
-         res.redirect("/home");
-       }*/
-     });
+    });
   });
 });
 
@@ -51,52 +49,37 @@ router.get('/uploads/:file', function (req, res){
 });
 
 router.get('/filelist', function(req, res) {
-    var dirname = path.resolve(".")+'/uploads/';
-    models.roomModel.getRoomByUser(req.session.username, function( err, room){
-      if(err == null){
-        //console.log("FILES");
-        //console.log(room[0].files);
-        //for(var i = 0; i < room[0].files.length; i++){
-          //files[i] = room[0].files[i].name;
-          //files[i].push(room[0].files[i].name);
-      //  }
-        res.send(room[0].files);
-      } else {
-        res.send(err);
-      }
-    });
-      });
-    //var files = models.fileModel.getFiles(function(err,files){
-    /*files = fs.readdirSync(dirname);
-    var filelist = filelist || [];
-    files.forEach(function(file) {
-        if (fs.statSync(dirname + file).isDirectory()) {
-          filelist = walkSync(dirname + file, filelist);
-      }
-      else {
-          filelist.push(file);
-      }
+  var dirname = path.resolve(".")+'/uploads/';
+  models.roomModel.getRoomByUser(req.session.username, function( err, room){
+    if(err == null){
+      res.send(room[0].files);
+    } else {
+      res.send(err);
+    }
   });
-    res.send(filelist);*/
+});
 
 router.get('/delete/:name', function(req, res) {
   var dirname = path.resolve(".")+'/uploads/';
   models.fileModel.deleteFile(req.params.name, function(err) {
-    console.log("AQUI");
     models.roomModel.getRoomByUser(req.session.username, function( err, room){
-      console.log("ALI");
       models.roomModel.deleteFileInRoom(room[0].name, req.params.name,function( err, rooms){
-        console.log(room[0].name)
-      if(err == null){
-        console.log("Deleted File sucefully!");
-        res.redirect('/home');
-      }
-      else {
-        res.send(err);
-      }
+        if(err == null){
+          models.roomModel.getUsers(room[0].name, function (err, usersRoom) {
+            for(var i = 0; i < usersRoom.users.length; i++){
+              models.userModel.getEmail(usersRoom.users[i], function(erro, user) {
+                sendEmail(req.session.username,user[0], req.params.name, "deleted");
+              });
+            }
+          });
+          res.redirect('/home');        
+        }
+        else {
+          res.send(err);
+        }
+      });
     });
-    });
-});
+  });
 });
 
 // Add this route for download it
@@ -106,5 +89,51 @@ router.get('/:file(*)', function(req, res, next){ // this routes all types of fi
   res.download(dirname); // magic of download fuction
 });
 
+// Notifications by email
+function sendEmail(userAction, user, filename, action) {
+  var today = new Date();
+  var dd = today.getDate();
+    var mm = today.getMonth() + 1; //January is 0!
+    var yyyy = today.getFullYear();
 
-module.exports = router;
+    if (dd < 10) {
+      dd = '0' + dd
+    }
+
+    if (mm < 10) {
+      mm = '0' + mm
+    }
+
+    today = mm + '/' + dd + '/' + yyyy;
+
+    var html = [userAction + " has " + action + " " + filename].join('');
+
+    var transporter = nodemailer.createTransport({
+      service: 'Gmail',
+      auth: {
+        user: 'sdis.proj2.2016@gmail.com',
+        pass: 'sdis2016'
+      }
+    });
+
+    var mailOptions = {
+        from: 'Bancas Comunitarias <sdis.proj2.2016@gmail.com>', // sender address
+        to: user.email, // list of receivers
+        subject: "A file has been " + action + " in your room" , // Subject line
+        text: "An action has been made",
+        html: html
+      };
+
+      transporter.sendMail(mailOptions, function (error, info) {
+        console.log("Sending email");
+        if (error) {
+          console.log("Falhou o mail");
+        } else {
+          console.log("Funcionou o mail");
+        }
+      });
+      console.log("OK, processed");
+      //res.status(200).json({ok:"processed"});
+    };
+
+    module.exports = router;

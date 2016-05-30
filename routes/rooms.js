@@ -54,7 +54,6 @@ var userController = require('../db/controllers/userController.js');
  router.get('/getRoom', function(req, res) {
   models.roomModel.getRoomByUser(req.session.username, function( err, room){
     if(err == null){
-      console.log(room[0].code)
         res.send(room[0]);
       } else {
         res.send(err);

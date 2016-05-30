@@ -17,6 +17,10 @@ User.getUserByEmail = function (email, callback) {
     User.find({email: email}, callback);
 };
 
+User.getEmail = function(name, callback) {
+    User.find({username: name}, {email: String}, callback);
+};
+
 User.getUsers = function(callback) {
 	User.find(callback);
 };

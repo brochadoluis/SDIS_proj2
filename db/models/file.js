@@ -14,9 +14,6 @@ File.getFileByName = function (name, callback) {
     File.find({name: name}, callback);
 };
 
-File.getFileByID = function (id, callback) {
-    File.find({_id: id}, callback);
-};
 
 File.addFile = function(name, callback) {
     var newFile = new File ({

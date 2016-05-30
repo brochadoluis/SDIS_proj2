@@ -28,8 +28,8 @@ Room.getRoomByUser = function (username, callback) {
 	Room.find({ users: username }, callback);
 };
 
-Room.getFilesByRoom = function(name,callback){
-	Room.find({files: [String]},callback);
+Room.getUsers = function(roomName,callback) {
+    Room.findOne({name: roomName},{users: [String]},callback);
 };
 
 Room.createRoom = function(name,callback) {

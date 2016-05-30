@@ -1,10 +1,6 @@
 var models = require('../models/index.js');
 
 exports.login = function (email, password, session, res) {
-    console.log("email");
-        console.log(email);
-        console.log("password");
-        console.log(password);
     models.userModel.getUserByEmail(email, function (err, user) {
         if (err) {
             return res.status(400).json({error: "Invalid Login"});
@@ -20,11 +16,9 @@ exports.login = function (email, password, session, res) {
             session.username = user[0].username;
             models.roomModel.getRoomByUser(session.username, function( erro, room){
                 if(room.length == 0){
-                    console.log(room);
                     res.redirect('/rooms');
                 }
                 else{
-                    console.log(room);
                     res.redirect('/home');
                 }
             });
