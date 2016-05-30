@@ -13,7 +13,7 @@ $(document).ready(function() {
     $('#userList table tbody').on('click', 'td a.linkdeleteuser', deleteUser);
     // Show files in the folder
     showFiles();
-
+    showRoomData();
 });
 
 // Functions =============================================================
@@ -140,8 +140,33 @@ function showFiles() {
                 tableContent += '<tr>';
                 tableContent += '<td>' + data[item] + '</td>'; // this file name column
                 tableContent += '<td><a href=files/'+ data[item] + '>' + data[item] + '</a></td>'; // this was the link column
+                tableContent += '<td><a href=files/delete/'+ data[item] + '>Delete</a></td>';
             }
 // this all added into the tableContent variable
         $('#fileList table tbody').html(tableContent); // add into the table
+    });
+};
+function showRoomData() {
+    // Empty content string
+    var tableContent = ''; // it a variable
+    // jQuery AJAX call for JSON
+    $.getJSON( 'rooms/getRoom', function( data ) { // get files as data
+            /*for(var item in data) { // one by one get and add fortable
+                tableContent += '<tr>';
+                tableContent += '<td>' + data[item] + '</td>'; // this file name column
+            }*/
+            $.each( data, function( key, val ) {
+                if(key === "name"){
+                    tableContent += '<tr>';
+                    tableContent += '<td> Room Name: ' +  val + '</td>';
+                }
+                if(key === "code"){
+                    tableContent += '<tr>';
+                    tableContent += '<td> Room Code: ' +  val + '</td>';
+            } // this file name column
+  });
+// this all adde
+// this all added into the tableContent variable
+        $('#roomInfo table tbody').html(tableContent); // add into the table
     });
 };

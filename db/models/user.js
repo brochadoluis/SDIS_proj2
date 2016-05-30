@@ -22,7 +22,11 @@ User.getUsers = function(callback) {
 };
 
 User.registerUser = function (name, username, email, password, callback) {
-    var user = new User({name: name, username: username, email: email, password: password});
+    var user = new User({
+        name: name, 
+        username: username, 
+        email: email, 
+        password: password});
 
     user.save(callback);
 };

@@ -1,4 +1,3 @@
-
 // models
 var File = require('./file');
 var User = require('./user');

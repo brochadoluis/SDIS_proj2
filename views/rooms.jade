@@ -1,0 +1,13 @@
+h1 Create Room 
+form(method = "post", action = "/rooms/create")
+	p Room Name
+	input(type="text", name = "name", value = name)
+	p
+	input(type="submit", value = "Create",class="button-style")
+
+h1 Join Existent Room
+form(method = "post", action = "/rooms/join")
+	p Code
+	input(type="text", name = "code", value = code)
+	p
+	input(type="submit", value = "Join",class="button-style")

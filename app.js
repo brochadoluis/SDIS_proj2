@@ -19,6 +19,7 @@ var db = monk('localhost:27017/teste');*/
 var index = require('./routes/index');
 var users = require('./routes/users');
 var files = require('./routes/files');
+var rooms = require('./routes/rooms');
 
 var app = express();
 
@@ -52,6 +53,7 @@ app.use(session({secret: 'sdisrocks'}));
 app.use('/', index);
 app.use('/users', users);
 app.use('/files', files);
+app.use('/rooms', rooms);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next){

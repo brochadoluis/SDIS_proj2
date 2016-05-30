@@ -23,10 +23,6 @@ router.get('/userlist', function(req, res) {
  * POST to adduser.
  */
 router.post('/register', function(req, res) {
-    console.log(req.body.name);
-    console.log(req.body.username);
-    console.log(req.body.email);
-    console.log(req.body.password);
    if (req.body.name != "" && req.body.username != "" && req.body.email != "" && req.body.password != "") {
        userController.register(req.body.name, req.body.username, req.body.email, req.body.password, req.session, res);
    } else {
